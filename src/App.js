@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-
-function Greeting(props) {
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <Text >Hello {props.name}</Text>
-    </View>
-  );
-}
 
 export default class App extends Component {
   constructor(props) {
@@ -17,7 +9,12 @@ export default class App extends Component {
 
     let startWeek = 40;
 
-    this.state = { currentWeek: startWeek, percent: startWeek / 52 * 100 };
+    this.state = {
+      currentWeek: startWeek,
+      percent: startWeek / 52 * 100,
+      startDate: 'dd/mm/yyyy',
+      endDate: 'dd/mm/yyyy',
+    };
 
     this.getPercentualFromWeek = this.getPercentualFromWeek.bind(this);
   }
@@ -31,10 +28,14 @@ export default class App extends Component {
       <View style={styles.page}>
         <View style={styles.topIconBar}>
           <View style={styles.leftButtons}>
-            <Icon name='info-circle' style={styles.topButton} size={40}></Icon>
+            <TouchableOpacity onPress={this.onPress}>
+              <Icon name='info-circle' style={styles.appIcon} size={40}></Icon>
+            </TouchableOpacity>
           </View>
           <View style={styles.rightButtons}>
-            <Icon name='cog' style={styles.topButton} size={40}></Icon>
+            <TouchableOpacity onPress={this.onPress}>
+              <Icon name='cog' style={styles.appIcon} size={40}></Icon>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.graphContainer}>
@@ -47,15 +48,37 @@ export default class App extends Component {
             {
               (fill) => (
                 <Text style={styles.labelWeeks}>
-                  Semana{'\n'}{ this.state.currentWeek }
+                  Semana{'\n'}{this.state.currentWeek}
                 </Text>
               )
             }
           </AnimatedCircularProgress>
         </View>
-        <Greeting name='Anderson'></Greeting>
-        <Greeting name='Emanuelle'></Greeting>
-        <Text>asdfasdf</Text>
+        <View style={styles.datesContainer}>
+          <Text style={styles.date}>{this.state.startDate}</Text>
+          <Icon name='calendar' style={styles.appIcon} size={40}></Icon>
+          <Text style={styles.date}>{this.state.endDate}</Text>
+        </View>
+        <View style={styles.bottomButtons}>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity onPress={this.onPress}>
+              <Icon name='money' style={styles.appIcon} size={50}></Icon>
+            </TouchableOpacity>
+            <Text>Meta Atual</Text>
+          </View>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity onPress={this.onPress}>
+              <Icon name='download' style={styles.appIcon} size={50}></Icon>
+            </TouchableOpacity>
+            <Text>Fazer Depósito</Text>
+          </View>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity onPress={this.onPress}>
+              <Icon name='bar-chart' style={styles.appIcon} size={50}></Icon>
+            </TouchableOpacity>
+            <Text>Acumulado</Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -81,7 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  topButton: {
+  appIcon: {
     color: '#fff',
   },
   graphContainer: {
@@ -91,5 +114,24 @@ const styles = StyleSheet.create({
     color: '#497127',
     fontSize: 30,
     textAlign: 'center',
+  },
+  datesContainer: {
+    paddingTop: 30,
+    paddingBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  date: {
+    fontSize: 20,
+    color: '#497127',
+  },
+  bottomButtons: {
+    paddingTop: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  actionContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
   }
 })
