@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-export default class App extends Component {
+export default class HomePage extends Component {
+  static navigationOptions = {
+    title: 'Home'
+  };
+
   constructor(props) {
     super(props);
 
@@ -15,8 +19,6 @@ export default class App extends Component {
       startDate: 'dd/mm/yyyy',
       endDate: 'dd/mm/yyyy',
     };
-
-    this.getPercentualFromWeek = this.getPercentualFromWeek.bind(this);
   }
 
   getPercentualFromWeek(weekNumber) {
@@ -28,14 +30,20 @@ export default class App extends Component {
       <View style={styles.page}>
         <View style={styles.topIconBar}>
           <View style={styles.leftButtons}>
-            <TouchableOpacity onPress={this.onPress}>
-              <Icon name='info-circle' style={styles.appIcon} size={40}></Icon>
-            </TouchableOpacity>
+          <View style={styles.actionContainer}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Details')}>
+                <Icon name={'info-circle'} style={styles.appIcon} size={40}></Icon>
+              </TouchableOpacity>
+              <Text>Detalhes</Text>
+            </View>
           </View>
           <View style={styles.rightButtons}>
-            <TouchableOpacity onPress={this.onPress}>
-              <Icon name='cog' style={styles.appIcon} size={40}></Icon>
-            </TouchableOpacity>
+            <View style={styles.actionContainer}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Config')}>
+                <Icon name={'cog'} style={styles.appIcon} size={40}></Icon>
+              </TouchableOpacity>
+              <Text>Configurações</Text>
+            </View>
           </View>
         </View>
         <View style={styles.graphContainer}>
@@ -56,25 +64,25 @@ export default class App extends Component {
         </View>
         <View style={styles.datesContainer}>
           <Text style={styles.date}>{this.state.startDate}</Text>
-          <Icon name='calendar' style={styles.appIcon} size={40}></Icon>
+          <Icon name={'calendar-alt'} style={styles.appIcon} size={40}></Icon>
           <Text style={styles.date}>{this.state.endDate}</Text>
         </View>
         <View style={styles.bottomButtons}>
           <View style={styles.actionContainer}>
             <TouchableOpacity onPress={this.onPress}>
-              <Icon name='money' style={styles.appIcon} size={50}></Icon>
+              <Icon name={'money-bill'} style={styles.appIcon} size={50}></Icon>
             </TouchableOpacity>
             <Text>Meta Atual</Text>
           </View>
           <View style={styles.actionContainer}>
             <TouchableOpacity onPress={this.onPress}>
-              <Icon name='download' style={styles.appIcon} size={50}></Icon>
+              <Icon name={'download'} style={styles.appIcon} size={50}></Icon>
             </TouchableOpacity>
             <Text>Fazer Depósito</Text>
           </View>
           <View style={styles.actionContainer}>
             <TouchableOpacity onPress={this.onPress}>
-              <Icon name='bar-chart' style={styles.appIcon} size={50}></Icon>
+              <Icon name={'chart-bar'} style={styles.appIcon} size={50}></Icon>
             </TouchableOpacity>
             <Text>Acumulado</Text>
           </View>
@@ -106,6 +114,7 @@ const styles = StyleSheet.create({
   },
   appIcon: {
     color: '#fff',
+    paddingBottom: 5
   },
   graphContainer: {
     alignItems: 'center',
