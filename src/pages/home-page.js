@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, Button, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { connect } from 'react-redux'; 
 
-export default class HomePage extends Component {
+class HomePage extends Component {
   static navigationOptions = {
     title: 'Home'
   };
@@ -26,6 +27,8 @@ export default class HomePage extends Component {
   }
 
   render() {
+    const { amount, date } = this.props;
+
     return (
       <View style={styles.page}>
         <View style={styles.topIconBar}>
@@ -48,8 +51,8 @@ export default class HomePage extends Component {
         </View>
         <View style={styles.graphContainer}>
           <AnimatedCircularProgress
-            size={250}
-            width={35}
+            size={200}
+            width={25}
             fill={this.state.percent}
             tintColor="#fff"
             backgroundColor="#689F38">
@@ -66,6 +69,10 @@ export default class HomePage extends Component {
           <Text style={styles.date}>{this.state.startDate}</Text>
           <Icon name={'calendar-alt'} style={styles.appIcon} size={40}></Icon>
           <Text style={styles.date}>{this.state.endDate}</Text>
+        </View>
+        <View>
+          <Text>Amount: {amount}</Text>
+          <Text>Date: {date}</Text>
         </View>
         <View style={styles.bottomButtons}>
           <View style={styles.actionContainer}>
@@ -91,6 +98,13 @@ export default class HomePage extends Component {
     );
   }
 }
+
+const mapStateToProps = store => ({
+  amount: store.amountState.amount,
+  date: store.dateState.date
+});
+
+export default connect(mapStateToProps)(HomePage);
 
 const styles = StyleSheet.create({
   page: {
