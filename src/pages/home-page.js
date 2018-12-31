@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Text, Button, View, StyleSheet, TouchableOpacity, AlertAndroid } from 'react-native';
+import { Text, Button, View, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { connect } from 'react-redux'; 
+import { connect } from 'react-redux';
 import moment from 'moment';
-import { getWeekNumberFromDate, getPercentualFromWeek } from '../util';
+import 'moment/min/locales';
+
+import { getWeekNumberFromDate, getPercentualFromWeek, getLocale } from '../util';
 
 class HomePage extends Component {
   static navigationOptions = {
@@ -24,27 +26,33 @@ class HomePage extends Component {
     };
   }
 
+  componentWillMount() {
+    moment.locale(getLocale());
+  }
+
   render() {
     const { amount, date } = this.props;
 
     let endDate = date.clone();
-    
+
     endDate.add(1, 'y');
 
     let formattedStartDate = date.format('L'),
-        formattedEndDate = endDate.format('L');
+      formattedEndDate = endDate.format('L');
 
     let currentWeekNumber = getWeekNumberFromDate(date);
-
-    alert('weeknumber: ' + currentWeekNumber);
 
     let percent = getPercentualFromWeek(currentWeekNumber);
 
     return (
       <View style={styles.page}>
+        <StatusBar
+          backgroundColor="#8BC34A"
+          barStyle="light-content"
+        />
         <View style={styles.topIconBar}>
           <View style={styles.leftButtons}>
-          <View style={styles.actionContainer}>
+            <View style={styles.actionContainer}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Details')}>
                 <Icon name={'info-circle'} style={styles.appIcon} size={40}></Icon>
               </TouchableOpacity>

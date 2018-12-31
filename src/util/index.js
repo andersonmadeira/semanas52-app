@@ -13,10 +13,18 @@ export function getLocale() {
     let systemlang = 'en';
 
     if (Platform.OS === 'android') {
+        console.log('android', NativeModules.I18nManager.localeIdentifier);
         systemlang = NativeModules.I18nManager.localeIdentifier;
     } else {
+        console.log('ios');
         systemlang = NativeModules.SettingsManager.settings.AppleLocale;
     }
 
+    alert('sysmtelang: ' + systemlang);
+
     return systemlang;
+}
+
+export function localizeDate(momentDate) {
+    return momentDate.locale(getLocale());
 }
