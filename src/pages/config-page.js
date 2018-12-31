@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, DatePickerAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { connect } from 'react-redux';
 import { updateStartDate, updateStartAmount } from '../actions';
@@ -9,6 +9,28 @@ class ConfigPage extends Component {
     static navigationOptions = {
         title: 'Details'
     };
+    
+    constructor(props) {
+        super(props);
+
+        this.state = { date: props.date, amount: props.amount };
+
+        this.openDatePicker = this.openDatePicker.bind(this);
+    }
+
+    async openDatePicker(updateDateAction) {
+        try {
+            const { action, year, month, day } = await DatePickerAndroid.open({
+                date: new Date()
+            });
+
+            if ( action !== DatePickerAndroid.dismissedAction ) {
+                updateDateAction(day + '/' + month + '/' + year);
+            }
+        } catch ({code, message}) {
+            console.warn('Cannot open date picker', message);
+        }  
+    }
 
     render() {
         const { updateStartAmount, updateStartDate, amount, date } = this.props;
@@ -22,10 +44,13 @@ class ConfigPage extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.configPageWrapper}>
-                    <Text>Valor Inicial:</Text>
-                    <TextInput keyboardType='numeric' placeholder='Valor inicial' onChangeText={(amount) => updateStartAmount(amount)} value={`${amount}`} />
-                    <Text>Data de início:</Text>
-                    <TextInput placeholder='Valor inicial' onChangeText={(date) => updateStartDate(date)} value={date} />
+                    <Text style={styles.label}>Valor Inicial:</Text>
+                    <TextInput style={styles.inputField} keyboardType='numeric' placeholder='Valor inicial' onChangeText={(amount) => updateStartAmount(amount)} value={`${amount}`} />
+                    <Text style={styles.label}>Data de início:</Text>
+                    <TouchableOpacity style={styles.dateContainer} onPress={() => this.openDatePicker(updateStartDate)}>
+                        <Icon name={'calendar-alt'} style={styles.inputField} size={25} />
+                        <Text style={styles.inputField}>{date}</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -54,6 +79,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    dateContainer: {
+        paddingTop: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     topTextFont: {
         color: '#fff',
     },
@@ -65,5 +95,13 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         padding: 50
+    },
+    label: {
+        fontSize: 25,
+    },
+    inputField: {
+        paddingLeft: 15,
+        fontSize: 25,
+        color: '#fff'
     }
 });
