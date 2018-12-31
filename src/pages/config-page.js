@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { connect } from 'react-redux';
 import { updateStartDate, updateStartAmount } from '../actions';
 import { bindActionCreators } from 'redux';
+import { getLocale } from '../util';
+import moment from 'moment';
 
 class ConfigPage extends Component {
     static navigationOptions = {
@@ -12,8 +14,6 @@ class ConfigPage extends Component {
     
     constructor(props) {
         super(props);
-
-        this.state = { date: props.date, amount: props.amount };
 
         this.openDatePicker = this.openDatePicker.bind(this);
     }
@@ -25,7 +25,7 @@ class ConfigPage extends Component {
             });
 
             if ( action !== DatePickerAndroid.dismissedAction ) {
-                updateDateAction(day + '/' + month + '/' + year);
+                updateDateAction( moment({year: year, month: month, day: day}) );
             }
         } catch ({code, message}) {
             console.warn('Cannot open date picker', message);
@@ -34,6 +34,8 @@ class ConfigPage extends Component {
 
     render() {
         const { updateStartAmount, updateStartDate, amount, date } = this.props;
+
+        let formattedDate = date.format('L');
 
         return (
             <View style={styles.page}>
@@ -49,7 +51,7 @@ class ConfigPage extends Component {
                     <Text style={styles.label}>Data de início:</Text>
                     <TouchableOpacity style={styles.dateContainer} onPress={() => this.openDatePicker(updateStartDate)}>
                         <Icon name={'calendar-alt'} style={styles.inputField} size={25} />
-                        <Text style={styles.inputField}>{date}</Text>
+                        <Text style={styles.inputField}>{formattedDate}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

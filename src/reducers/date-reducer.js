@@ -1,7 +1,8 @@
 import { UPDATE_START_DATE } from "../actions/actionTypes";
+import moment from 'moment';
 
 const initialValue = {
-    date: '18/05/2018',
+    date: moment(),
 };
 
 export const dateReducer = (state = initialValue, action) => {

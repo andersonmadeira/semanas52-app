@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Text, Button, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, Button, View, StyleSheet, TouchableOpacity, AlertAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { connect } from 'react-redux'; 
+import moment from 'moment';
+import { getWeekNumberFromDate, getPercentualFromWeek } from '../util';
 
 class HomePage extends Component {
   static navigationOptions = {
@@ -22,12 +24,21 @@ class HomePage extends Component {
     };
   }
 
-  getPercentualFromWeek(weekNumber) {
-    return (weekNumber / 52) * 100;
-  }
-
   render() {
     const { amount, date } = this.props;
+
+    let endDate = date.clone();
+    
+    endDate.add(1, 'y');
+
+    let formattedStartDate = date.format('L'),
+        formattedEndDate = endDate.format('L');
+
+    let currentWeekNumber = getWeekNumberFromDate(date);
+
+    alert('weeknumber: ' + currentWeekNumber);
+
+    let percent = getPercentualFromWeek(currentWeekNumber);
 
     return (
       <View style={styles.page}>
@@ -53,26 +64,22 @@ class HomePage extends Component {
           <AnimatedCircularProgress
             size={200}
             width={25}
-            fill={this.state.percent}
+            fill={percent}
             tintColor="#fff"
             backgroundColor="#689F38">
             {
               (fill) => (
                 <Text style={styles.labelWeeks}>
-                  Semana{'\n'}{this.state.currentWeek}
+                  Semana{'\n'}{currentWeekNumber}
                 </Text>
               )
             }
           </AnimatedCircularProgress>
         </View>
         <View style={styles.datesContainer}>
-          <Text style={styles.date}>{this.state.startDate}</Text>
+          <Text style={styles.date}>{formattedStartDate}</Text>
           <Icon name={'calendar-alt'} style={styles.appIcon} size={40}></Icon>
-          <Text style={styles.date}>{this.state.endDate}</Text>
-        </View>
-        <View>
-          <Text>Amount: {amount}</Text>
-          <Text>Date: {date}</Text>
+          <Text style={styles.date}>{formattedEndDate}</Text>
         </View>
         <View style={styles.bottomButtons}>
           <View style={styles.actionContainer}>
